@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+html {
+    @apply transition-colors duration-300 ease-in-out;
+  }
+
+html {
+    transition: background-color 0.3s ease;
+  }
