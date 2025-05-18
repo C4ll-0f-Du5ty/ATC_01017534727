@@ -1,18 +1,26 @@
 # 🎟️ Eventory
 
-**Eventory** is a powerful and modern full-stack event booking platform built using Django REST Framework and React.js. It supports user authentication, event management, real-time seat booking, profile handling, and more — all styled with a sleek, responsive interface.
+**Eventory** is a powerful and modern full-stack event booking platform built using Django REST Framework and React.js. It supports user authentication, admin control, user profile and booking management, and more — all wrapped in a sleek, responsive interface with real-time updates.
 
 ---
 
 ## 🚀 Features
 
-- 🔐 Token-based authentication (`Dusty` prefix)
-- 📅 Admin-managed event creation and updates
-- 🎫 User-friendly event booking and cancellation
-- 🧑‍💼 User profile management with image upload
-- 🌗 Light/Dark mode toggle (localStorage synced)
-- 🔔 Real-time notifications and friend request system (optional)
-- ☁️ AWS S3 integration for media storage
+- 🔐 Custom token-based authentication (`Dusty` prefix)
+- 📅 Admin-managed event creation, update, and deletion
+- 🎫 Real-time event booking system with seat adjustment
+- 🧑‍💼 User profile with booking history and attended events
+- ✍️ User can update personal info via a dedicated settings page
+- ⚙️ Admin panel:
+  - Manage events and user bookings
+  - Promote users to admins
+  - Modify user data (except other admins)
+  - Requires superuser to modify admins
+- 🧾 Event Details component showing full info and availability
+- ⛔ `NotFound` component for unauthorized or invalid access
+- 🌗 Light/Dark mode with persistent state (localStorage synced)
+- ☁️ AWS S3 integration for secure media storage
+- 📸 Image upload support for user profiles and events
 
 ---
 
@@ -149,11 +157,29 @@ DB_PORT=
 
 ## 👤 User Roles
 
-- **Admin**
-  - Can create, update, delete events
 - **User**
-  - Can browse and book events
-  - Can update profile
+  - Can browse events and book/cancel seats
+  - Can view profile with past and current bookings
+  - Can update personal info in settings
+
+- **Admin**
+  - Can create, update, and delete events
+  - Can manage user bookings and details
+  - Can promote regular users to admins
+  - Cannot modify or delete other admins
+
+- **Superuser**
+  - Has full control, including modifying admin accounts
+
+---
+
+## 📂 Key Components
+
+- `EventDetails`: Displays full info about an event
+- `NotFound`: Shown for unauthorized or invalid routes/actions
+- `Profile`: Displays user’s bookings and attended events
+- `Settings`: Allows users to edit their profile data
+- `AdminPanel`: For managing users, events, and permissions
 
 ---
 
@@ -173,5 +199,5 @@ This project is licensed under the MIT License.
 
 Developed by **Allem**  
 📧 Email: [allemhamed98@gmail.com](mailto:allemhamed98@gmail.com)  
-🔗 GitHub: [https://github.com/C4ll-0f-Du5ty](https://github.com/C4ll-0f-Du5ty)     
+🔗 GitHub: [https://github.com/C4ll-0f-Du5ty](https://github.com/C4ll-0f-Du5ty)  
 💼 Portfolio: [https://allem.pro/](https://allem.pro/)

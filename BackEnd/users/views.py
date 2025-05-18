@@ -51,8 +51,7 @@ class UserDetails(ModelViewSet):
     def get_object(self):
         user_id = self.kwargs.get('pk')
         user = get_object_or_404(User, pk=user_id)
-        
-        # Keep existing admin-specific protections
+
         if self.request.method in ['PUT', 'PATCH', 'DELETE'] and user.role == 'admin':
             if not self.request.user.is_superuser:
                 if user != self.request.user:

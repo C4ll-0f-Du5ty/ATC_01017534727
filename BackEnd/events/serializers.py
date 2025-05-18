@@ -15,12 +15,12 @@ class EventSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        # Assign the authenticated user to created_by
+
         validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        # Ensure created_by is not overwritten during updates
+
         validated_data.pop('created_by', None)
         return super().update(instance, validated_data)
 

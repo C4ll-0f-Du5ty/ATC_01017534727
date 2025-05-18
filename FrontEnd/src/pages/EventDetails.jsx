@@ -18,6 +18,29 @@ const EventDetails = () => {
     const [modalOpen, setModalOpen] = useState(false)
     const darkMode = JSON.parse(localStorage.getItem('dark')) || false
 
+    const fetchUser = async (userId) => {
+        if (users[userId] || userLoading[userId]) return
+        setUserLoading((prev) => ({ ...prev, [userId]: true }))
+        try {
+            const res = await fetch(`${api.users}${userId}/`, {
+                headers: authTokens ? { Authorization: `Dusty ${authTokens.access}` } : {},
+            })
+            if (!res.ok) {
+                console.error(`Failed to fetch user ${userId}: ${res.status}`)
+                throw new Error('Failed to fetch user')
+            }
+            const data = await res.json()
+            setUsers((prev) => ({ ...prev, [userId]: data }))
+        } catch (err) {
+            // Suppress toast for 403 errors
+            if (err.message !== 'Failed to fetch user') {
+                toast.error(err.message, { position: 'top-center' })
+            }
+        } finally {
+            setUserLoading((prev) => ({ ...prev, [userId]: false }))
+        }
+    }
+
     useEffect(() => {
         const fetchEvent = async () => {
             try {
@@ -33,29 +56,6 @@ const EventDetails = () => {
                 }
             } catch (err) {
                 toast.error(err.message, { position: 'top-center' })
-            }
-        }
-
-        const fetchUser = async (userId) => {
-            if (users[userId] || userLoading[userId]) return
-            setUserLoading((prev) => ({ ...prev, [userId]: true }))
-            try {
-                const res = await fetch(`${api.users}${userId}/`, {
-                    headers: authTokens ? { Authorization: `Dusty ${authTokens.access}` } : {},
-                })
-                if (!res.ok) {
-                    console.error(`Failed to fetch user ${userId}: ${res.status}`)
-                    throw new Error('Failed to fetch user')
-                }
-                const data = await res.json()
-                setUsers((prev) => ({ ...prev, [userId]: data }))
-            } catch (err) {
-                // Suppress toast for 403 errors
-                if (err.message !== 'Failed to fetch user') {
-                    toast.error(err.message, { position: 'top-center' })
-                }
-            } finally {
-                setUserLoading((prev) => ({ ...prev, [userId]: false }))
             }
         }
 
@@ -157,8 +157,7 @@ const EventDetails = () => {
     if (loading) {
         return (
             <div
-                className={`min-h-screen flex items-center justify-center ${darkMode ? 'bg-gray-900 text-gray-300' : 'bg-gray-50 text-gray-700'
-                    }`}
+                className={`min-h-screen flex items-center justify-center ${darkMode ? 'bg-gray-900 text-gray-300' : 'bg-gray-50 text-gray-700'}`}
             >
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
@@ -168,8 +167,7 @@ const EventDetails = () => {
     if (!event) {
         return (
             <div
-                className={`min-h-screen flex items-center justify-center ${darkMode ? 'bg-gray-900 text-gray-300' : 'bg-gray-50 text-gray-500'
-                    }`}
+                className={`min-h-screen flex items-center justify-center ${darkMode ? 'bg-gray-900 text-gray-300' : 'bg-gray-50 text-gray-500'}`}
             >
                 Event not found.
             </div>
@@ -178,8 +176,7 @@ const EventDetails = () => {
 
     return (
         <div
-            className={`min-h-screen p-6 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'
-                }`}
+            className={`min-h-screen p-6 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}
         >
             <div className="max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-6">
@@ -187,8 +184,8 @@ const EventDetails = () => {
                     <button
                         onClick={() => navigate(user?.role === 'admin' ? '/admin' : '/events')}
                         className={`px-4 py-2 rounded-md text-sm font-medium ${darkMode
-                                ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
-                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                             }`}
                     >
                         Back to {user?.role === 'admin' ? 'Admin' : 'Events'}
@@ -205,8 +202,7 @@ const EventDetails = () => {
                         />
                     ) : (
                         <div
-                            className={`w-full h-64 ${darkMode ? 'bg-gray-600' : 'bg-gray-300'
-                                } rounded-md mb-6 flex items-center justify-center`}
+                            className={`w-full h-64 ${darkMode ? 'bg-gray-600' : 'bg-gray-300'} rounded-md mb-6 flex items-center justify-center`}
                         >
                             <span className="text-gray-500 dark:text-gray-400">No Image</span>
                         </div>
@@ -265,8 +261,8 @@ const EventDetails = () => {
                             <button
                                 onClick={handleBookEvent}
                                 className={`px-4 py-2 rounded-md text-sm font-medium text-white ${bookingLoading
-                                        ? 'bg-blue-400 cursor-not-allowed'
-                                        : 'bg-blue-600 hover:bg-blue-700'
+                                    ? 'bg-blue-400 cursor-not-allowed'
+                                    : 'bg-blue-600 hover:bg-blue-700'
                                     }`}
                                 disabled={bookingLoading}
                             >
@@ -286,32 +282,27 @@ const EventDetails = () => {
 
                 {user?.role === 'admin' && bookings.length > 0 && (
                     <div
-                        className={`mt-8 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'
-                            } p-6`}
+                        className={`mt-8 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'} p-6`}
                     >
                         <h2 className="text-xl font-semibold mb-4">Bookings</h2>
                         <div className="overflow-x-auto">
                             <table
-                                className={`min-w-full table-auto border ${darkMode ? 'border-gray-700' : 'border-gray-200'
-                                    }`}
+                                className={`min-w-full table-auto border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}
                             >
                                 <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-100'}>
                                     <tr>
                                         <th
-                                            className={`px-4 py-2 text-left ${darkMode ? 'text-white' : 'text-gray-700'
-                                                }`}
+                                            className={`px-4 py-2 text-left ${darkMode ? 'text-white' : 'text-gray-700'}`}
                                         >
                                             User
                                         </th>
                                         <th
-                                            className={`px-4 py-2 text-left ${darkMode ? 'text-white' : 'text-gray-700'
-                                                }`}
+                                            className={`px-4 py-2 text-left ${darkMode ? 'text-white' : 'text-gray-700'}`}
                                         >
                                             Booked On
                                         </th>
                                         <th
-                                            className={`px-4 py-2 text-left ${darkMode ? 'text-white' : 'text-gray-700'
-                                                }`}
+                                            className={`px-4 py-2 text-left ${darkMode ? 'text-white' : 'text-gray-700'}`}
                                         >
                                             Action
                                         </th>
@@ -322,13 +313,12 @@ const EventDetails = () => {
                                         <tr
                                             key={booking.id}
                                             className={`border-t ${darkMode
-                                                    ? 'border-gray-700 hover:bg-gray-700'
-                                                    : 'border-gray-200 hover:bg-gray-50'
+                                                ? 'border-gray-700 hover:bg-gray-700'
+                                                : 'border-gray-200 hover:bg-gray-50'
                                                 }`}
                                         >
                                             <td
-                                                className={`px-4 py-2 ${darkMode ? 'text-gray-100' : 'text-gray-800'
-                                                    }`}
+                                                className={`px-4 py-2 ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}
                                             >
                                                 {typeof booking.user?.username === 'string'
                                                     ? booking.user.username
@@ -339,29 +329,25 @@ const EventDetails = () => {
                                                         'Unknown User'}
                                             </td>
                                             <td
-                                                className={`px-4 py-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'
-                                                    }`}
+                                                className={`px-4 py-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
                                             >
                                                 {booking.booked_at
                                                     ? new Date(booking.booked_at).toLocaleDateString()
                                                     : 'N/A'}
                                             </td>
                                             <td
-                                                className={`px-4 py-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'
-                                                    }`}
+                                                className={`px-4 py-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
                                             >
                                                 <button
                                                     onClick={() => handleCancelBooking(booking.id)}
                                                     className={`text-red-500 hover:text-red-700 text-sm font-medium ${booking.event_details?.date &&
-                                                            new Date(booking.event_details.date) <
-                                                            new Date()
+                                                            new Date(booking.event_details.date) < new Date()
                                                             ? 'opacity-50 cursor-not-allowed'
                                                             : ''
                                                         }`}
                                                     disabled={
                                                         booking.event_details?.date &&
-                                                        new Date(booking.event_details.date) <
-                                                        new Date()
+                                                        new Date(booking.event_details.date) < new Date()
                                                     }
                                                 >
                                                     Cancel

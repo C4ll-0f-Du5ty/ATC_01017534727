@@ -7,18 +7,6 @@ from django.db import transaction
 from rest_framework.exceptions import ValidationError
 from django.utils import timezone
 
-# class EventViewSet(ModelViewSet):
-#     queryset = Event.objects.all()
-#     serializer_class = EventSerializer
-    
-#     def get_permissions(self):
-#         if self.action in ['create', 'update', 'destroy']:
-#             return [IsAuthenticated(), IsAdmin()]
-#         return [AllowAny()]
-    
-#     def perform_create(self, serializer):
-#         serializer.save(created_by=self.request.user)
-
 class EventViewSet(ReadOnlyModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
