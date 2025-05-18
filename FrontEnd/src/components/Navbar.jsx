@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
-import { Moon, Sun, ChevronDown, Settings, User, Shield, Loader } from 'lucide-react'
+import { Moon, Sun, ChevronDown, Settings, User, Shield, Loader, Home } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import api from '../api'
 
@@ -41,27 +41,35 @@ const Navbar = () => {
 
     useEffect(() => {
         const fetchProfile = async () => {
-            if (authTokens) {
-                const res = await fetch(api.profile, {
-                    headers: { Authorization: `Dusty ${authTokens.access}` },
-                })
-                if (res.ok) {
-                    const data = await res.json()
-                    setUserData(data)
+            if (authTokens && !userData) {
+                try {
+                    const res = await fetch(api.profile, {
+                        headers: { Authorization: `Dusty ${authTokens.access}` },
+                    })
+                    if (res.ok) {
+                        const data = await res.json()
+                        setUserData(data)
+                    } else {
+                        console.error('Failed to fetch profile:', res.status)
+                    }
+                } catch (err) {
+                    console.error('Error fetching profile:', err)
                 }
             }
         }
         fetchProfile()
-    }, [authTokens])
+    }, [authTokens, userData])
 
     const handleLogout = () => {
         logoutUser()
+        setDropdownOpen(false)
         navigate('/')
     }
 
     const toggleThemeWithRefresh = () => {
         setLoading(true)
         const newTheme = !darkMode
+        setDarkMode(newTheme)
         localStorage.setItem('dark', JSON.stringify(newTheme))
         setTimeout(() => {
             window.location.reload()
@@ -133,6 +141,17 @@ const Navbar = () => {
 
                                     <li>
                                         <Link
+                                            to="/"
+                                            onClick={() => setDropdownOpen(false)}
+                                            className="flex items-center gap-2 px-4 py-2 hover:bg-blue-100 dark:hover:bg-blue-600"
+                                            role="menuitem"
+                                        >
+                                            <Home size={16} /> Home
+                                        </Link>
+                                    </li>
+
+                                    <li>
+                                        <Link
                                             to="/profile"
                                             onClick={() => setDropdownOpen(false)}
                                             className="flex items-center gap-2 px-4 py-2 hover:bg-blue-100 dark:hover:bg-blue-600"
@@ -168,10 +187,7 @@ const Navbar = () => {
 
                                     <li>
                                         <button
-                                            onClick={() => {
-                                                handleLogout()
-                                                setDropdownOpen(false)
-                                            }}
+                                            onClick={handleLogout}
                                             className="w-full text-left px-4 py-2 hover:bg-red-100 dark:hover:bg-red-600 text-red-600 dark:text-red-400"
                                             role="menuitem"
                                         >
