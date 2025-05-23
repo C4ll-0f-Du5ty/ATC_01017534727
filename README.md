@@ -1,26 +1,28 @@
 # 🎟️ Eventory
 
-**Eventory** is a powerful and modern full-stack event booking platform built using Django REST Framework and React.js. It supports user authentication, admin control, user profile and booking management, and more — all wrapped in a sleek, responsive interface with real-time updates.
+**Eventory** is a modern full-stack event booking platform built with Django REST Framework and React.js. It features real-time seat management, role-based access control, AWS S3 media integration, and a clean, responsive interface — perfect for managing and attending events.
 
 ---
 
-## 🚀 Features
+## 🌐 Live Demo
 
-- 🔐 Custom token-based authentication (`Dusty` prefix)
-- 📅 Admin-managed event creation, update, and deletion
-- 🎫 Real-time event booking system with seat adjustment
-- 🧑‍💼 User profile with booking history and attended events
-- ✍️ User can update personal info via a dedicated settings page
-- ⚙️ Admin panel:
-  - Manage events and user bookings
-  - Promote users to admins
-  - Modify user data (except other admins)
-  - Requires superuser to modify admins
-- 🧾 Event Details component showing full info and availability
-- ⛔ `NotFound` component for unauthorized or invalid access
-- 🌗 Light/Dark mode with persistent state (localStorage synced)
-- ☁️ AWS S3 integration for secure media storage
-- 📸 Image upload support for user profiles and events
+Access the deployed platform here:  
+👉 [https://eventory.allem.pro/](https://eventory.allem.pro/)
+
+---
+
+## 🚀 Key Features
+
+- 🔐 Token-based authentication with custom `Dusty` prefix
+- 📅 Admin dashboard to manage events, users, and bookings
+- 🎫 Real-time event booking with auto seat decrement/increment
+- 🧑‍💼 User profiles with booking and attendance history
+- ⚙️ Settings page for updating user information
+- 🌗 Light/Dark mode synced via `localStorage`
+- ☁️ AWS S3 storage for user profile images
+- ❌ Custom `NotFound` component for unauthorized or broken routes
+- 🛡️ Role-based permissions and API protection
+- 🧾 Full event details via `EventDetails` component
 
 ---
 
@@ -29,16 +31,15 @@
 - **Backend:** Django, Django REST Framework, PostgreSQL
 - **Frontend:** React.js, Tailwind CSS, Framer Motion
 - **Authentication:** Custom Token Auth (`Dusty`)
-- **Storage:** AWS S3
-- **Database:** PostgreSQL
+- **Media Storage:** AWS S3
 - **Styling & Animation:** Tailwind CSS, Framer Motion
 
 ---
 
-## 📦 Project Structure
+## 📁 Project Structure
 
 ```
-eventory/
+.
 ├── backend/                  # Django backend
 │   ├── manage.py
 │   ├── requirements.txt
@@ -47,145 +48,96 @@ eventory/
 │   ├── package.json
 │   ├── src/
 │   └── ...
-├── .env                      # Environment variables
+├── .env                      # Add your environment variables here
 └── README.md
 ```
 
 ---
 
-## 🧑‍💻 Getting Started
+## ⚙️ Environment Setup
 
 ### ✅ Prerequisites
 
 - Python 3.8+
 - Node.js 16+ and npm
 - PostgreSQL
-- AWS S3 account (for media storage)
+- AWS S3 account
 
----
+### 🔐 Configuration
 
-### ⚙️ Backend Setup
-
-1. **Create and activate a virtual environment**:
-
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-2. **Install dependencies**:
-
-```bash
-pip install -r requirements.txt
-```
-
-3. **Create a `.env` file** in the project root with the following variables:
+Fill out the `.env` file at the root level with the following keys:
 
 ```env
 # AWS S3 Credentials
-AWS_ACCESS_KEY_ID=''
-AWS_SECRET_ACCESS_KEY=''
-AWS_STORAGE_BUCKET_NAME=''
-AWS_S3_REGION_NAME=''
-AWS_S3_ADDRESSING_STYLE=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_STORAGE_BUCKET_NAME=
+AWS_S3_REGION_NAME=eu-north-1
+AWS_S3_ADDRESSING_STYLE=virtual
 
 # PostgreSQL Database Config
 DB_NAME=
 DB_USER=
 DB_PASSWORD=
-DB_HOST=
-DB_PORT=
+DB_HOST=localhost
+DB_PORT=5432
 ```
 
-4. **Apply migrations**:
+---
+
+## ▶️ Getting Started
+
+### 1. Backend Setup
 
 ```bash
+cd backend
+python -m venv venv
+
+source venv/bin/activate  
+
+# On Windows:
+venv\Scripts\activate
+
+pip install -r requirements.txt
 python manage.py migrate
-```
-
-5. **Run the backend server**:
-
-```bash
 python manage.py runserver
 ```
 
----
-
-### 💻 Frontend Setup
-
-1. **Navigate to the frontend folder**:
+### 2. Frontend Setup
 
 ```bash
 cd frontend
-```
-
-2. **Install required packages**:
-
-```bash
 npm install
-```
-
-3. **Start the React development server**:
-
-```bash
-npm start
+npm run dev
 ```
 
 ---
 
-## 🌐 Environment Variables Summary
+## 👤 User Roles & Permissions
 
-Make sure your `.env` file is configured as follows for both AWS and database integration:
+| Role         | Capabilities                                                                 |
+|--------------|-------------------------------------------------------------------------------|
+| **User**     | Book/cancel events, view event details, update profile                       |
+| **Admin**    | Create/update/delete events, manage **user** bookings, promote users         |
+| **Superuser**| Full access — including promoting/demoting **admins** and editing their data |
 
-```env
-# AWS S3
-AWS_ACCESS_KEY_ID=''
-AWS_SECRET_ACCESS_KEY=''
-AWS_STORAGE_BUCKET_NAME=''
-AWS_S3_REGION_NAME='eu-north-1'
-AWS_S3_ADDRESSING_STYLE=virtual
-
-# PostgreSQL
-DB_NAME=
-DB_USER=
-DB_PASSWORD=
-DB_HOST=
-DB_PORT=
-```
+> ❗ **Admins cannot modify other admins' data or roles.** Only a superuser can manage admin-level accounts.
 
 ---
 
-## 👤 User Roles
+## 📂 Core Components
 
-- **User**
-  - Can browse events and book/cancel seats
-  - Can view profile with past and current bookings
-  - Can update personal info in settings
-
-- **Admin**
-  - Can create, update, and delete events
-  - Can manage user bookings and details
-  - Can promote regular users to admins
-  - Cannot modify or delete other admins
-
-- **Superuser**
-  - Has full control, including modifying admin accounts
+- **`EventDetails`** — Full event info and booking actions  
+- **`Profile`** — Lists user's bookings and attended events  
+- **`Settings`** — Update personal info and profile image  
+- **`AdminPanel`** — Admin tools to manage events and users  
+- **`NotFound`** — Handles broken or unauthorized routes
 
 ---
 
-## 📂 Key Components
+## 🤝 Contributing
 
-- `EventDetails`: Displays full info about an event
-- `NotFound`: Shown for unauthorized or invalid routes/actions
-- `Profile`: Displays user’s bookings and attended events
-- `Settings`: Allows users to edit their profile data
-- `AdminPanel`: For managing users, events, and permissions
-
----
-
-## 🙌 Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome. For large changes, please open an issue first to discuss your ideas and goals.
 
 ---
 
