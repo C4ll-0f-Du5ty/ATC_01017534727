@@ -30,10 +30,6 @@ SECRET_KEY = 'django-insecure-^_)7)gw2mw967a6j=xp9z#!vm_weotbep@&d0#^)u2t#4jbc*_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
-CORS_ALLOW_ALL_ORIGINS = True
-
 AUTH_USER_MODEL = 'users.User'
 
 
@@ -146,16 +142,37 @@ WSGI_APPLICATION = 'BackEnd.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': env('DB_NAME'),
+#         'USER': env('DB_USER'),
+#         'PASSWORD': env('DB_PASSWORD'),
+#         'HOST': env('DB_HOST'),
+#         'PORT': env('DB_PORT'),
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT'),
+        'NAME': 'eventory',
+        'USER': "eventory_owner",
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': 5432,
     }
 }
+
+ALLOWED_HOSTS = [
+    'localhost',
+    'eventory.allem.pro',
+    '*.koyeb.app',  # Koyeb’s default domain
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'https://eventory.allem.pro',
+    'https://your-vercel-app.vercel.app',  
+]
 
 
 # Password validation
@@ -200,10 +217,16 @@ STATIC_URL = 'static/'
 # DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME')
+# AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+# AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+# AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+# AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME')
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME', 'us-east-1')
+
 # AWS_S3_ADDRESSING_STYLE = env('AWS_S3_ADDRESSING_STYLE')
 AWS_S3_FILE_OVERWRITE = False
 
