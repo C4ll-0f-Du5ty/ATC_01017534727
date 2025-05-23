@@ -1,4 +1,5 @@
 venv
+BackEnd/db.sqlite3
 BackEnd/BackEnd/.env
 FrontEnd/src/Private/AdminRoute.jsx
 BackEnd/BackEnd/TempSettings.py
