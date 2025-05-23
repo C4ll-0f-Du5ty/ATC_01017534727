@@ -8,6 +8,7 @@ import { useNavigate, Link } from 'react-router-dom'
 const Home = () => {
     const [events, setEvents] = useState([])
     const [bookedEvents, setBookedEvents] = useState([])
+    const [loading, setLoading] = useState(true)
     const [darkMode, setDarkMode] = useState(localStorage.getItem('dark') === 'true')
     const { authTokens } = useContext(AuthContext)
     const navigate = useNavigate()
@@ -46,8 +47,13 @@ const Home = () => {
             }
         }
 
-        fetchEvents()
-        fetchBookedEvents()
+        const loadData = async () => {
+            setLoading(true)
+            await Promise.all([fetchEvents(), fetchBookedEvents()])
+            setLoading(false)
+        }
+
+        loadData()
     }, [authTokens])
 
     const handleBooking = async (eventId) => {
@@ -77,6 +83,16 @@ const Home = () => {
         } catch (err) {
             toast.error(err.message, { position: 'top-center' })
         }
+    }
+
+    if (loading) {
+        return (
+            <div
+                className={`min-h-screen flex items-center justify-center ${darkMode ? 'bg-gray-900 text-gray-300' : 'bg-gray-50 text-gray-700'}`}
+            >
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+        )
     }
 
     return (
