@@ -166,8 +166,10 @@ DATABASES = {
 ALLOWED_HOSTS = [
     'localhost',
     'eventory.allem.pro',
-    '*.koyeb.app',  # Koyeb’s default domain
-]
+    '*.koyeb.app',
+    'vercel.app',
+    '127.0.0.1',
+    ]
 
 CORS_ALLOWED_ORIGINS = [
     'https://eventory.allem.pro',
