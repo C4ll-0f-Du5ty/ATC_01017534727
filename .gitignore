@@ -1,4 +1,4 @@
 venv
-BackEnd/.env
 BackEnd/BackEnd/.env
 FrontEnd/src/Private/AdminRoute.jsx
+BackEnd/BackEnd/TempSettings.py
