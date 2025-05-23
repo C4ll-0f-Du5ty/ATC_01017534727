@@ -136,7 +136,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'BackEnd.wsgi.application'
+WSGI_APPLICATION = 'BackEnd.wsgi.app'
 
 
 # Database
@@ -167,9 +167,8 @@ ALLOWED_HOSTS = [
     'localhost',
     'eventory.allem.pro',
     '*.koyeb.app',
-    'vercel.app',
-    '127.0.0.1',
-    ]
+    '12l.7.0.0.1', '.verceapp',
+]
 
 CORS_ALLOWED_ORIGINS = [
     'https://eventory.allem.pro',
