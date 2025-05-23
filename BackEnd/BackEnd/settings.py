@@ -136,7 +136,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'BackEnd.wsgi.app'
+WSGI_APPLICATION = 'BackEnd.wsgi.application'
 
 
 # Database
@@ -170,11 +170,12 @@ ALLOWED_HOSTS = [
     '12l.7.0.0.1', '.verceapp',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    'https://eventory.allem.pro',
-    'https://your-vercel-app.vercel.app',  
-]
+# CORS_ALLOWED_ORIGINS = [
+#     'https://eventory.allem.pro',
+#     'https://your-vercel-app.vercel.app',  
+# ]
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
