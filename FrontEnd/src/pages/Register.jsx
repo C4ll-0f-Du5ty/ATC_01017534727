@@ -6,15 +6,14 @@ import api from '../api'
 const Register = () => {
     const navigate = useNavigate()
     const darkMode = localStorage.getItem('dark') === 'true'
-
     const [formData, setFormData] = useState({
         username: '',
         email: '',
         password: '',
         password2: '',
     })
-
     const [touched, setTouched] = useState({})
+    const [loading, setLoading] = useState(false) // New loading state
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -43,21 +42,28 @@ const Register = () => {
             return
         }
 
-        const response = await fetch(api.register, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        })
+        setLoading(true) // Start loading
+        try {
+            const response = await fetch(api.register, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
 
-        if (response.status === 201) {
-            toast.success("Account created successfully")
-            navigate('/login')
-        } else {
-            const data = await response.json()
-            if (data.username) toast.error(`Username: ${data.username[0]}`)
-            if (data.email) toast.error(`Email: ${data.email[0]}`)
-            if (data.password) toast.error(`Password: ${data.password[0]}`)
-            if (data.non_field_errors) toast.error(data.non_field_errors[0])
+            if (response.status === 201) {
+                toast.success("Account created successfully")
+                navigate('/login')
+            } else {
+                const data = await response.json()
+                if (data.username) toast.error(`Username: ${data.username[0]}`)
+                if (data.email) toast.error(`Email: ${data.email[0]}`)
+                if (data.password) toast.error(`Password: ${data.password[0]}`)
+                if (data.non_field_errors) toast.error(data.non_field_errors[0])
+            }
+        } catch (err) {
+            toast.error("Network error. Please try again.")
+        } finally {
+            setLoading(false) // Stop loading
         }
     }
 
@@ -140,9 +146,17 @@ const Register = () => {
 
                 <button
                     type="submit"
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition"
+                    className={`w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={loading}
                 >
-                    Create Account
+                    {loading ? (
+                        <div className="flex items-center">
+                            <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
+                            Creating...
+                        </div>
+                    ) : (
+                        'Create Account'
+                    )}
                 </button>
             </form>
         </div>
